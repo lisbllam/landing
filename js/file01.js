@@ -1,6 +1,7 @@
 "use strict";
 
-import {fetchProducts} from './functions.js';
+import {fetchCategories, fetchProducts} from './functions.js';
+import {saveVotes} from './firebase.js';
 
 const showToast = () => {
     const toast = document.getElementById("toast-interactive");
@@ -22,6 +23,41 @@ const showVideo = () => {
     showToast();
     showVideo();
 })();
+
+let enableForm= () => {
+    const form = document.getElementById("form_voting");
+    if(form){
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const productId= document.getElementById("select_roduct").value;
+
+            saveVotes(productId)
+                .then(response => {
+                    if(response.status){
+                        alert(response.message);
+                    } else {
+                        alert(response.message);
+                    }
+                });
+        });
+    }
+};
+
+let renderCategories = async () => {
+    try {
+        const result= await fetchCategories('https://data-dawm.github.io/datum/reseller/categories.xml');
+        if(result.success){
+            let container = document.getElementById('products-container');
+            container.innnerHTML = `<option selected disabled>Seleccione una categoría</option>`;
+            let categoryHTML= result.body();
+            let categories= categoryHTML.getElementsByTagName();
+
+        }
+    } catch (error) {
+        
+    }
+}
 
 const renderProducts = () => {
     fetchProducts('https://data-dawm.github.io/datum/reseller/products.json')
@@ -81,4 +117,5 @@ const renderProducts = () => {
 
 (() => {
   renderProducts();
+  enableForm();
 })();
