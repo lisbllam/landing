@@ -149,8 +149,8 @@ const displayVotes = async () => {
         for (const key in votes) {
             tableHTML += `
                 <tr>
-                    <td>${votes[key].product}</td>
-                    <td>${votes[key].vote}</td>
+                    <td>${votes[key].productId}</td>
+                    <td>${votes[key].timestamp}</td>
                 </tr>
             `
         }
