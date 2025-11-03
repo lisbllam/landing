@@ -1,7 +1,7 @@
 "use strict";
 
 import {fetchCategories, fetchProducts} from './functions.js';
-import {saveVotes} from './firebase.js';
+import {saveVote, getVotes} from './firebase.js';
 
 const showToast = () => {
     const toast = document.getElementById("toast-interactive");
@@ -107,8 +107,68 @@ const renderProducts = () => {
     });
 };
 
+const enableForm = () =>{
+    const form = document.getElementById("form_voting");
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const productId= document.getElementById("select_product").value;
+
+        saveVote(productId)
+            .then(() => {
+                alert("Vote registrado correctamente");
+            })
+            .catch((error) => {
+                alert("Error al guardar el voto " + error.message)
+            })
+    })
+}
+
+const displayVotes = async () => {
+    const result= await getVotes();
+    const resultsContainer= document.getElementById("results");
+
+    resultsContainer.innerHTML= `<p class="text-gray-500 text-center mt-16">Resultado de la votación</p>`;
+
+    if (result.success){
+        const votes= result.data;
+
+        let tableHTML= `
+            <table border="1" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Votos</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+        `;
+
+        for (const key in votes) {
+            tableHTML += `
+                <tr>
+                    <td>${votes[key].product}</td>
+                    <td>${votes[key].vote}</td>
+                </tr>
+            `
+        }
+
+        tableHTML += `
+                </tbody>
+            </table>
+        `;
+
+        resultsContainer.innerHTML= tableHTML;
+    } else {
+        resultsContainer.innerHTML = `<p>${result.message}</p>`;
+    }
+}
+
 (() => {
     renderCategories();
     renderProducts();
     enableForm();
+    displayVotes();
 })();

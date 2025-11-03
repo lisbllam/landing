@@ -2,21 +2,23 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/x.y.z/firebase
 import { getDatabase, ref, set, push, get, child } from "https://www.gstatic.com/firebasejs/x.y.z/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID",
+  apiKey: "AIzaSyBG1R0lwhXCEr1uT-tlrtjGQt6yUIxitxk",
+  authDomain: "landing-b43d8.firebaseapp.com",
+  databaseURL: "https://landing-b43d8-default-rtdb.firebaseio.com",
+  projectId: "landing-b43d8",
+  storageBucket: "landing-b43d8.firebasestorage.app",
+  messagingSenderId: "284355547407",
+  appId: "1:284355547407:web:0262b210384b2dac03ae7a",
+  measurementId: "G-GBEDMG103R"
 };
 
 const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
 
-let saveVotes = (productId) =>{
+let saveVote = (productId) =>{
     const votesRef= ref(database, 'votes');
-    const database= push(votesRef);
+    const newVoteRef= push(votesRef);
 
     return set(newVoteRef, {
         productId: productId,
@@ -37,4 +39,32 @@ let saveVotes = (productId) =>{
     });
 }
 
-export {saveVotes}
+const getVotes = async () => {
+    try {
+        const  db = getDatabase();
+
+        const votesRef = ref(db, "votes");
+
+        const snapshot = await get(votesRef);
+
+        if(snapshot.exists()){
+            return{
+                success: true,
+                data: snapshot.val()
+            };
+        } else{
+            return{
+                success: false,
+                message: "No hay datos disponibles"
+            };
+        }
+
+    } catch (error) {
+        return{
+            succes: false,
+            message: error.message
+        };
+    }
+};
+
+export {saveVote, getVotes}
