@@ -1,6 +1,7 @@
 "use strict";
 
-import {fetchProducts, fetchCategories} from './functions.js';
+import {fetchCategories, fetchProducts} from './functions.js';
+import {saveVotes} from './firebase.js';
 
 const showToast = () => {
     const toast = document.getElementById("toast-interactive");
@@ -107,6 +108,7 @@ const renderProducts = () => {
 };
 
 (() => {
+    enableForm();
     renderCategories();
     renderProducts();
 })();
