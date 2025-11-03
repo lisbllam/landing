@@ -108,7 +108,7 @@ const renderProducts = () => {
 };
 
 (() => {
-    enableForm();
     renderCategories();
     renderProducts();
+    enableForm();
 })();
