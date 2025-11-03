@@ -134,6 +134,13 @@ const displayVotes = async () => {
     if (result.success){
         const votes= result.data;
 
+        const voteCount = {};
+
+        Object.keys(votes).forEach(key => {
+            const productId = votes[key].productId;
+            voteCount[productId] = (voteCount[productId] || 0) +1;
+        })
+
         let tableHTML= `
             <table border="1" cellpadding="8">
                 <thead>
@@ -146,14 +153,14 @@ const displayVotes = async () => {
 
         `;
 
-        for (const key in votes) {
+        Object.keys(voteCount).forEach(product => {
             tableHTML += `
-                <tr>
-                    <td>${votes[key].productId}</td>
-                    <td>${votes[key].timestamp}</td>
-                </tr>
-            `
-        }
+            <tr>
+                <td class="border-b p-2">${product}</td>
+                <td class="border-b p-2">${voteCount[product]}</td>
+            </tr>
+            `;
+        });
 
         tableHTML += `
                 </tbody>
